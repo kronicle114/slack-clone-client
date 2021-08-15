@@ -1,25 +1,37 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { Route, withRouter } from 'react-router-dom';
+import Dashboard from './components/dashboard';
+import LoginForm from './components/login/login-form';
+import SignupPage from './components/signup/signup-page';
 import './App.css';
 
-function App() {
+export const App = () => {
+  const [user, setUser] = useState({ username: null })
+
+  const storeUser = user => {
+    localStorage.getItem("user");
+    setUser(user);
+  };
+
+  const logout = () => {
+    localStorage.clear();
+    setUser({ username: null });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <section className="app">
+      {localStorage.user ? (
+        <Route
+          exact path="/dashboard"
+          render={(props) => <Dashboard {...props} storeUser={storeUser} user={user.username} logout={logout} isAuthed={true} />}
+        />
+      ) : (
+          <Route exact path="/signup" component={SignupPage} />
+      )}
+      <Route exact path="/" component={LoginForm} storeUser={storeUser} />
+    </section>
+  )
 }
 
-export default App;
+export default withRouter(App);
+
