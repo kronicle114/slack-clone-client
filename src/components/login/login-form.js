@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
 import { API_BASE_URL  } from "../../config";
+import { Redirect } from 'react-router-dom';
 
 export const LoginForm = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState(""); // test123
+    const [password, setPassword] = useState(""); // trish123
+    // eslint-disable-next-line no-unused-vars
+    const [authToken, setAuthToken] = useState("")
+    const [loggedIn, setLoggedIn] = useState(true)
+    const [authError, setAuthError] = useState(false)
+    const [modalOpen, setModalOpen] = useState(true);
 
     const handleSubmit = e => {
-        console.log('handleSubmit')
         e.preventDefault(e);
-        setUsername(username);
-        // you'd want to fetch via `${API_BASE_URL}/auth/signin` and return the auth token, which will then get set on localStorage of browser
 
+        // set Login and Logout on local storage
+        setUsername(username)
+        setLoggedIn(loggedIn)
+        localStorage.removeItem("logout")
+
+        // Fetch via `${API_BASE_URL}/auth/signin` and return the auth token, which will then get set on localStorage of browser
         const headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -24,48 +33,87 @@ export const LoginForm = () => {
                 password
             })
         })
-        .then(res => {
-            const r = res.json()
-            console.log('res:', r)
-            return r
-        })
+            .then(res => {
+                return res.json()
+            })
+            .then((auth) => {
+                const { message, code, name } = auth;
+                if (code === 401 || message === 'Unauthorized' || name === 'AuthenticationError') {
+                    setAuthError(true)
+                    localStorage.setItem("error", name)
+                }
+
+                if (auth.hasOwnProperty("authToken")) {
+                    localStorage.setItem("user", username);
+                    localStorage.setItem("loggedIn", loggedIn);
+                    localStorage.setItem("authToken", auth.authToken);
+                    localStorage.removeItem("error")
+                    setAuthToken(auth)
+                }
+                return auth;
+            })
+            .catch(err => {
+                const { code } = err;
+                const message = code === 401 ? 'Incorrect username or password' : 'Unable to login, please try again';
+
+                return Promise.reject(
+                    new Error({
+                        _error: message
+                    })
+                )
+            })
+    };
+
+    /* ==== RENDER VALIDATION ERROR MESSAGE ==== */
+    let errorMessage;
+    if (authError && username.length > 0) {
+        errorMessage = <p>Login Failed. Check your credentials and resubmit.</p>
+        setInterval(function () { localStorage.removeItem('error') }, 2000);
+    } else if (localStorage.error) {
+        errorMessage = <p>Login Failed. Check your credentials and resubmit.</p>
+        setInterval(function () { localStorage.removeItem('error') }, 2000);
+    } else {
+        errorMessage = <p></p>
     }
 
     return(
         <section className='signup-container'>
-            <article className='signup-modal'>
-                <form className='signup-form'
-                    onSubmit={handleSubmit}
-                >
-                </form>
-            </article>
-            <input
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-                placeholder="enter username"
-                type="text"
-                name="username"
-                // pattern="[A-Za-z0-9_]{1,15}"
-                title="Username should only contain letters, numbers and underscores; no more than 15 characters e.g. trisha_123"
-                id="login-username"
-                required
-                aria-labelledby="signup-username"
-            />
-            <input
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="enter password"
-                type="password"
-                name="password"
-                // pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
-                title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
-                required
-                id="login-password"
-                aria-labelledby="signup-password"
-            />
-            <button waves="teal" type="submit" className="signup-submit">
-                Submit
-            </button>
+            {errorMessage}
+            {
+                localStorage.loggedIn ? (
+                    <Redirect to="/dashboard" />
+                ) : (
+                    <article className="login-modal">
+                        <form className='signup-form'
+                            onSubmit={handleSubmit}
+                        >
+                            <input
+                                value={username}
+                                onChange={e => setUsername(e.target.value)}
+                                placeholder="enter username"
+                                type="text"
+                                name="username"
+                                id="login-username"
+                                required
+                                aria-labelledby="signup-username"
+                            />
+                            <input
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                                placeholder="enter password"
+                                type="password"
+                                name="password"
+                                required
+                                id="login-password"
+                                aria-labelledby="signup-password"
+                            />
+                            <button type="submit" className="signup-submit">
+                                Submit
+                            </button>
+                        </form>
+                    </article>
+                )
+            }
         </section>
     )
 }
