@@ -23,7 +23,15 @@ export const App = () => {
       {localStorage.user ? (
         <Route
           exact path="/dashboard"
-          render={(props) => <Dashboard {...props} storeUser={storeUser} user={user.username} logout={logout} isAuthed={true} />}
+          render={ (props) =>
+            <Dashboard
+              {...props}
+              storeUser={storeUser}
+              user={user.username}
+              logout={logout}
+              isAuthed={true}
+            />
+          }
         />
       ) : (
           <Route exact path="/signup" component={SignupPage} />

@@ -28,7 +28,7 @@ export const SignupForm = () => {
             'Accept': 'application/json'
         }
 
-        return fetch(`${API_BASE_URL}/auth/login`, {
+        return fetch(`${API_BASE_URL}/auth/signin`, {
             method: 'POST',
             headers,
             body: JSON.stringify({
@@ -315,13 +315,13 @@ export const SignupForm = () => {
                             >
                                 Submit
                             </button>
-                            {/* <Link
+                            <Link
                                 to="/"
                                 className="registration-link"
                                 aria-label="go back link to landing page"
                             >
                                 Go Back
-                            </Link> */}
+                            </Link>
                         </form>
                     </article>
                 )}
