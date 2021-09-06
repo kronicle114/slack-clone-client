@@ -1,0 +1,23 @@
+.dashboard {
+  background: #f4f4f4;
+  height: 100vh;
+  max-width: 100%;
+  width: 100vw;
+}
+
+button.logout {
+  background: transparent;
+  border: none;
+  color: #343434;
+  font-size: 14px;
+  margin: 4px;
+}
+
+#logout-link {
+  text-decoration: none;
+}
+
+.logout-div {
+  margin: 2px 2px 0px 0px;
+  float: right;
+}
