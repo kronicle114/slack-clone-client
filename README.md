@@ -2,6 +2,18 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Info
+* [Trello](https://trello.com/b/Xpb3wp0P/slackcloneaug21)
+* Backend: https://github.com/kronicle114/slackClone
+* Team Members: Trisha Aguinaldo, Kevin Gillooly, Patrick O'Connor
+* Stack: MERN
+
+## Running the Application
+1. Clone the repository and install it's dependencies
+2. Start the backend using the README instructions. Then, go to the client side and using the command: `yarn start` or look into the `package.json` file for instructions to run the application.
+3. Login using `username: test123` and `pw: 123`
+
+
 ## Available Scripts
 
 In the project directory, you can run:

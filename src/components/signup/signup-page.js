@@ -1,13 +1,11 @@
 import React from 'react';
 import SignupForm from './signup-form';
+import './index.css'
 
 export function SignupPage() {
     return (
-        <div className="registration-page">
+        <div className="signup-page">
             <h1>Register for SlackClone</h1>
-            <div className='reg-h5'>
-                <h5 id="reg-h5">I am a placeholder text</h5>
-            </div>
             <SignupForm />
         </div>
     );

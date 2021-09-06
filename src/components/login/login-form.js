@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { API_BASE_URL  } from "../../config";
 import { Redirect } from 'react-router-dom';
+import './index.css'
 
 export const LoginForm = () => {
     const [username, setUsername] = useState(""); // test123
@@ -9,7 +10,6 @@ export const LoginForm = () => {
     const [authToken, setAuthToken] = useState("")
     const [loggedIn, setLoggedIn] = useState(true)
     const [authError, setAuthError] = useState(false)
-    const [modalOpen, setModalOpen] = useState(true);
 
     const handleSubmit = e => {
         e.preventDefault(e);
@@ -84,6 +84,7 @@ export const LoginForm = () => {
                     <Redirect to="/dashboard" />
                 ) : (
                     <article className="login-modal">
+                        <h1>Login to Slack Clone</h1>
                         <form className='signup-form'
                             onSubmit={handleSubmit}
                         >

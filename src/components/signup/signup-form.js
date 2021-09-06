@@ -7,18 +7,19 @@ export const SignupForm = () => {
     const [name, setName] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    // const [confirmPassword, setConfirmPassword] = useState("");
     const [email, setEmail] = useState("")
-    const [confirmEmail, setConfirmEmail] = useState("")
+    // const [confirmEmail, setConfirmEmail] = useState("")
     // eslint-disable-next-line no-unused-vars
     const [authToken, setAuthToken] = useState("")
     const [loggedIn, setLoggedIn] = useState(true)
     const [validUsername, SetValidUsername] = useState('')
-    const [validPasswordLength, SetValidPasswordLength] = useState(false)
-    const [validPasswordCharacters, SetValidPasswordCharacters] = useState(false)
+    // const [validPasswordLength, SetValidPasswordLength] = useState(false)
+    // const [validPasswordCharacters, SetValidPasswordCharacters] = useState(false)
 
-    /* ====== LOGIN USER AFTER SUCCESSFUL REGISTRATION ====== */
+    /* ====== LOGIN USER AFTER SUCCESSFUL signup ====== */
     const logIn = data => {
+        console.log('data:', data)
         setUsername(username)
         setLoggedIn(loggedIn)
         localStorage.removeItem("logout")
@@ -37,6 +38,7 @@ export const SignupForm = () => {
             })
         })
             .then(res => {
+                console.log(res)
                 return res.json();
             })
             .then((auth) => {
@@ -46,6 +48,7 @@ export const SignupForm = () => {
                     localStorage.setItem("authToken", auth.authToken);
                     setAuthToken(auth)
                 }
+                console.log('auith', auth)
                 return auth;
             })
             .catch(err => {
@@ -85,27 +88,27 @@ export const SignupForm = () => {
     }
 
     /* ====== PASSWORD VALIDATION ====== */
-    const re = /(.*[A-Z].*)/; //positive look ahead for atleast 1 capital char
-    const validateChar = (password) => {
-        if (re.test(password)) {
-            SetValidPasswordCharacters(true)
-        } else {
-            SetValidPasswordCharacters(false)
-        }
-    }
+    // const re = /(.*[A-Z].*)/; //positive look ahead for atleast 1 capital char
+    // const validateChar = (password) => {
+    //     if (re.test(password)) {
+    //         SetValidPasswordCharacters(true)
+    //     } else {
+    //         SetValidPasswordCharacters(false)
+    //     }
+    // }
 
-    const validatePasswordLength = (password) => {
-        if (password.length && password.length >= 8 && password.length <= 72) {
-            SetValidPasswordLength(true)
-        } else {
-            SetValidPasswordLength(false)
-        }
-    }
+    // const validatePasswordLength = (password) => {
+    //     if (password.length && password.length >= 8 && password.length <= 72) {
+    //         SetValidPasswordLength(true)
+    //     } else {
+    //         SetValidPasswordLength(false)
+    //     }
+    // }
 
     /* ====== USEEFFECT ====== */
     useEffect(() => {
-        validateChar(password);
-        validatePasswordLength(password);
+        // validateChar(password);
+        // validatePasswordLength(password);
         validateUsername(username);
     }, [username, password])
 
@@ -115,27 +118,28 @@ export const SignupForm = () => {
 
         setUsername(username);
         setPassword(password);
-        setConfirmPassword(confirmPassword);
+        // setConfirmPassword(confirmPassword);
         setEmail(email);
-        setConfirmEmail(confirmEmail);
+        // setConfirmEmail(confirmEmail);
 
-        return fetch(`${API_BASE_URL}/users`, {
+        console.log(`${API_BASE_URL}/users/`)
+        console.log(username, password)
+        return fetch(`${API_BASE_URL}/users/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
             body: JSON.stringify({
-                name,
                 username,
                 password,
-                confirmPassword,
                 email,
-                confirmEmail
+                name
             })
         })
             .then(res => {
                 localStorage.setItem("registered", true)
+                console.log('res on handleSubmit', res)
                 return res.json();
             })
             .then(data => {
@@ -157,87 +161,20 @@ export const SignupForm = () => {
         usernameValidation = <p>{localStorage.validUsername}</p>
     }
 
-    /* ====== JSX PASSWORD VALIDATION ====== */
-    let passwordValidation;
-    if (password === '') {
-        passwordValidation = null
-    } else if (validPasswordLength && validPasswordCharacters) {
-        passwordValidation = (
-            <div>
-                <p className="valid-password">
-                    <span><svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><path className="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" /></svg>8 characters minimum</span>
-                </p>
-                <p className="valid-password test1">
-                    <span><svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><path className="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" /></svg>Atleast 1 capital letter</span>
-                </p>
-            </div>
-        )
-    } else if (validPasswordLength && !validPasswordCharacters) {
-        passwordValidation = (
-            <div>
-                <p className="valid-password">
-                    <span><svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><path className="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" /></svg>8 characters minimum</span>
-                </p>
-                <p className="invalid-password test3">
-                    Atleast 1 Capital Letter
-                </p>
-            </div>
-        )
-    } else if (validPasswordLength) {
-        passwordValidation = (
-            <div>
-                <p className="valid-password">
-                    <span><svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><path className="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" /></svg>8 characters minimum</span>
-                </p>
-                <p className="invalid-password">
-                    Atleast 1 capital letter
-                </p>
-            </div>
-        )
-    } else if (validPasswordCharacters) {
-        passwordValidation = (
-            <div>
-                <p className="invalid-password">
-                    8 characters minimum
-                </p>
-                <p className="valid-password test4">
-                    <span><svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><path className="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" /></svg>Atleast 1 capital letter</span>
-                </p>
-            </div>
-        )
-    } else {
-        passwordValidation = (
-            <div>
-                <p className="invalid-password">
-                    8 characters minimum
-                </p>
-                <p className="invalid-password">
-                    Atleast 1 capital letter
-                </p>
-            </div>
-        )
-    }
+    /* ====== TODO JSX PASSWORD VALIDATION ====== */
+    // let passwordValidation;
 
     /* ====== RENDER JSX ====== */
     return (
-        <section className="registration">
+        <section className="signup">
             {
                 localStorage.loggedIn ? (
                     <Redirect to="/dashboard" />
                 ) : (
-                    <article className="registration-form">
-                        <form className="registration-form"
+                    <article className="signup-form">
+                        <form className="signup-form"
                             onSubmit={handleSubmit}
                         >
-                            <input
-                                value={name}
-                                onChange={e => setName(e.target.value)}
-                                placeholder="optional nickname"
-                                type="text"
-                                name="name"
-                                aria-label="name"
-                            />
-
                             {/* ====== USERNAME VALIDATION ====== */}
                             {usernameValidation}
 
@@ -254,11 +191,11 @@ export const SignupForm = () => {
                             />
 
                             {/* ====== PASSWORD VALIDATION ====== */}
-                            {passwordValidation}
+                            {/* {passwordValidation} */}
 
-                            <fieldset className="registration-form-group">
+                            <fieldset className="signup-form-group">
                                 <input
-                                    className="registration-password-input"
+                                    className="signup-password-input"
                                     type="password"
                                     name="password"
                                     autoComplete="new-password"
@@ -267,24 +204,10 @@ export const SignupForm = () => {
                                     onChange={e => setPassword(e.target.value)}
                                     placeholder="enter password"
                                     required
-                                    pattern="(?=.*[A-Z]).{8,}$"
-                                    title="Must contain at least one uppercase letter and at least 8 or more characters"
                                     aria-label="password"
                                 />
 
                             </fieldset>
-
-                            <input
-                                value={confirmPassword}
-                                onChange={e => setConfirmPassword(e.target.value)}
-                                placeholder="confirm password"
-                                type="password"
-                                name="passwordConfirm"
-                                required
-                                pattern={password}
-                                title={`password: "${password}" & confirmPassword: "${confirmPassword}" must match`}
-                                aria-label="confirm Password"
-                            />
                             <input
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
@@ -295,29 +218,17 @@ export const SignupForm = () => {
                                 required
                                 aria-label="email"
                             />
-                            <input
-                                value={confirmEmail}
-                                onChange={e => setConfirmEmail(e.target.value)}
-                                placeholder="confirm email"
-                                type="email"
-                                name="emailConfirm"
-                                pattern={email}
-                                title={`email: "${email}" & confirmEmail: "${confirmEmail}" must match`}
-                                required
-                                aria-label="confirm email"
-                            />
                             <button
-                                waves="light "
                                 type="submit"
-                                aria-label="submit button registration form"
-                                className="registration-submit"
+                                aria-label="submit button signup form"
+                                className="signup-submit"
                                 disabled={!username || !password || !validUsername}
                             >
                                 Submit
                             </button>
                             <Link
                                 to="/"
-                                className="registration-link"
+                                className="signup-link"
                                 aria-label="go back link to landing page"
                             >
                                 Go Back
