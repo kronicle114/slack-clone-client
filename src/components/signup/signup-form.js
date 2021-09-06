@@ -4,22 +4,18 @@ import { API_BASE_URL } from '../../config';
 
 export const SignupForm = () => {
     // split state into different declarations
-    const [name, setName] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    // const [confirmPassword, setConfirmPassword] = useState("");
     const [email, setEmail] = useState("")
-    // const [confirmEmail, setConfirmEmail] = useState("")
     // eslint-disable-next-line no-unused-vars
+    const [authError, setAuthError] = useState(false)
     const [authToken, setAuthToken] = useState("")
     const [loggedIn, setLoggedIn] = useState(true)
     const [validUsername, SetValidUsername] = useState('')
-    // const [validPasswordLength, SetValidPasswordLength] = useState(false)
-    // const [validPasswordCharacters, SetValidPasswordCharacters] = useState(false)
 
     /* ====== LOGIN USER AFTER SUCCESSFUL signup ====== */
     const logIn = data => {
-        console.log('data:', data)
+        // set Login and Logout on local storage
         setUsername(username)
         setLoggedIn(loggedIn)
         localStorage.removeItem("logout")
@@ -38,7 +34,6 @@ export const SignupForm = () => {
             })
         })
             .then(res => {
-                console.log(res)
                 return res.json();
             })
             .then((auth) => {
@@ -48,7 +43,6 @@ export const SignupForm = () => {
                     localStorage.setItem("authToken", auth.authToken);
                     setAuthToken(auth)
                 }
-                console.log('auith', auth)
                 return auth;
             })
             .catch(err => {
@@ -87,30 +81,10 @@ export const SignupForm = () => {
         return _username;
     }
 
-    /* ====== PASSWORD VALIDATION ====== */
-    // const re = /(.*[A-Z].*)/; //positive look ahead for atleast 1 capital char
-    // const validateChar = (password) => {
-    //     if (re.test(password)) {
-    //         SetValidPasswordCharacters(true)
-    //     } else {
-    //         SetValidPasswordCharacters(false)
-    //     }
-    // }
-
-    // const validatePasswordLength = (password) => {
-    //     if (password.length && password.length >= 8 && password.length <= 72) {
-    //         SetValidPasswordLength(true)
-    //     } else {
-    //         SetValidPasswordLength(false)
-    //     }
-    // }
-
     /* ====== USEEFFECT ====== */
     useEffect(() => {
-        // validateChar(password);
-        // validatePasswordLength(password);
         validateUsername(username);
-    }, [username, password])
+    }, [username])
 
     /* ====== HANDLE FORM SUBMIT ====== */
     const handleSubmit = e => {
@@ -118,12 +92,8 @@ export const SignupForm = () => {
 
         setUsername(username);
         setPassword(password);
-        // setConfirmPassword(confirmPassword);
         setEmail(email);
-        // setConfirmEmail(confirmEmail);
 
-        console.log(`${API_BASE_URL}/users/`)
-        console.log(username, password)
         return fetch(`${API_BASE_URL}/users/`, {
             method: 'POST',
             headers: {
@@ -133,18 +103,16 @@ export const SignupForm = () => {
             body: JSON.stringify({
                 username,
                 password,
-                email,
-                name
+                email
             })
         })
             .then(res => {
                 localStorage.setItem("registered", true)
-                console.log('res on handleSubmit', res)
                 return res.json();
             })
-            .then(data => {
+            .then(data => 
                 logIn(data)
-            })
+            )
             .catch(err => {
                 if (err === 'TypeError: Failed to fetch') {
                     return Promise.reject(err)
@@ -160,9 +128,6 @@ export const SignupForm = () => {
     } else if (!validUsername) {
         usernameValidation = <p>{localStorage.validUsername}</p>
     }
-
-    /* ====== TODO JSX PASSWORD VALIDATION ====== */
-    // let passwordValidation;
 
     /* ====== RENDER JSX ====== */
     return (
@@ -189,9 +154,6 @@ export const SignupForm = () => {
                                 required
                                 aria-label="username"
                             />
-
-                            {/* ====== PASSWORD VALIDATION ====== */}
-                            {/* {passwordValidation} */}
 
                             <fieldset className="signup-form-group">
                                 <input
