@@ -1,23 +1,23 @@
 # Slack Clone App - Client
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
+Welcome! This is the frontend for our Slack Clone App. This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 ## Info
-* [Trello](https://trello.com/b/Xpb3wp0P/slackcloneaug21)
-* Backend: https://github.com/kronicle114/slackClone
+* Deployed App: [https://slack-clone-client.herokuapp.com/](https://slack-clone-client.herokuapp.com/)
+* Example Deployed User: `username: test123` and `pw: 123`
+* [Trello Board](https://trello.com/b/Xpb3wp0P/slackcloneaug21)
+* Backend Repository: https://github.com/kronicle114/slackClone
 * Team Members: Trisha Aguinaldo, Kevin Gillooly, Patrick O'Connor
 * Stack: MERN
-
 ## Running the Application
-1. Clone the repository and install it's dependencies
-2. Start the backend using the README instructions. Then, go to the client side and using the command: `yarn start` or look into the `package.json` file for instructions to run the application.
-3. Login using `username: test123` and `pw: 123`
+1. Clone the backend and frontend repository and install it's dependencies.
+2. Start the [backend](https://github.com/kronicle114/slackClone) using the README instructions. Then, go to the client side and using the command: `yarn start` or look into the `package.json` file for instructions to run the application.
+3. Example test user is `username: test123` and `pw: 123`
 
+## Deploy
+1. Follow instructions on [Deploying with Git](https://devcenter.heroku.com/articles/git)
+2. All deployment credentials are on the shared Trello Board under "PROJECT INFO"
 
 ## Available Scripts
-
 In the project directory, you can run:
-
 ### `yarn start`
 
 Runs the app in the development mode.\
